@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>DataLens — Natural Language Data Analyst</title>
+  <link rel="stylesheet" href="style.css" />
+  <!-- Plotly for charts -->
+  <script src="https://cdn.plot.ly/plotly-2.27.0.min.js"></script>
+  <!-- Icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
+</head>
+<body>
+
+  <!-- ===== SIDEBAR ===== -->
+  <aside class="sidebar" id="sidebar">
+    <div class="sidebar-header">
+      <div class="logo">
+        <i class="fas fa-database"></i>
+        <span>DataLens</span>
+      </div>
+      <button class="sidebar-toggle" id="sidebarToggle" title="Toggle sidebar">
+        <i class="fas fa-angles-left"></i>
+      </button>
+    </div>
+
+    <!-- Upload Section -->
+    <div class="sidebar-section">
+      <h3><i class="fas fa-cloud-arrow-up"></i> Upload Dataset</h3>
+      <div class="upload-zone" id="uploadZone">
+        <input type="file" id="fileInput" accept=".csv,.xlsx,.xls" hidden />
+        <i class="fas fa-file-csv upload-icon"></i>
+        <p>Drag & drop CSV / Excel</p>
+        <span>or click to browse</span>
+      </div>
+      <div class="file-info" id="fileInfo" hidden>
+        <div class="file-badge">
+          <i class="fas fa-file-lines"></i>
+          <span id="fileName">—</span>
+          <button id="removeFile" title="Remove"><i class="fas fa-xmark"></i></button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Schema Section -->
+    <div class="sidebar-section" id="schemaSection" hidden>
+      <h3><i class="fas fa-table-columns"></i> Detected Schema</h3>
+      <div class="schema-stats" id="schemaStats"></div>
+      <div class="schema-columns" id="schemaColumns"></div>
+    </div>
+
+    <!-- Quick Questions -->
+    <div class="sidebar-section" id="quickSection" hidden>
+      <h3><i class="fas fa-bolt"></i> Try These</h3>
+      <div class="quick-questions" id="quickQuestions"></div>
+    </div>
+
+    <div class="sidebar-footer">
+      <span>Built for Hackathon 2024</span>
+    </div>
+  </aside>
+
+  <!-- ===== MAIN CONTENT ===== -->
+  <main class="main" id="main">
+
+    <!-- Top bar -->
+    <header class="topbar">
+      <button class="menu-btn" id="menuBtn" title="Open sidebar">
+        <i class="fas fa-bars"></i>
+      </button>
+      <h1>Schema-Agnostic Natural Language Data Analyst</h1>
+      <div class="topbar-actions">
+        <button class="theme-btn" id="themeBtn" title="Toggle dark mode">
+          <i class="fas fa-moon"></i>
+        </button>
+      </div>
+    </header>
+
+    <!-- Landing state (before upload) -->
+    <section class="landing" id="landing">
+      <div class="landing-shell">
+        <div class="landing-content">
+          <div class="spotlight-badge">
+            <i class="fas fa-sparkles"></i>
+            AI analytics platform
+          </div>
+          <h2>Turn raw data into luxury-grade decisions.</h2>
+          <p>
+            Upload a CSV or Excel file and uncover patterns, trends, and answers in plain English.
+            Built for teams that want insights that feel as premium as the decisions they drive.
+          </p>
+
+          <div class="cta-row">
+            <button class="cta-btn" id="ctaUpload">
+              <i class="fas fa-cloud-arrow-up"></i> Upload your first dataset
+            </button>
+            <button class="secondary-btn" type="button" id="demoBtn">
+              <i class="fas fa-play"></i> View demo
+            </button>
+          </div>
+
+          <div class="stat-strip" aria-label="Key platform metrics">
+            <div class="mini-stat">
+              <strong>99.2%</strong>
+              <span>Data confidence</span>
+            </div>
+            <div class="mini-stat">
+              <strong>2.8x</strong>
+              <span>Faster analysis</span>
+            </div>
+            <div class="mini-stat">
+              <strong>24/7</strong>
+              <span>AI insights</span>
+            </div>
+          </div>
+
+          <div class="landing-steps">
+            <div class="step">
+              <div class="step-num">1</div>
+              <span>Upload dataset</span>
+            </div>
+            <div class="step-arrow"><i class="fas fa-arrow-right"></i></div>
+            <div class="step">
+              <div class="step-num">2</div>
+              <span>Ask a question</span>
+            </div>
+            <div class="step-arrow"><i class="fas fa-arrow-right"></i></div>
+            <div class="step">
+              <div class="step-num">3</div>
+              <span>Get insights</span>
+            </div>
+          </div>
+
+          <div class="sample-row" id="sampleRow" hidden>
+            No file handy? Try a sample:
+            <span id="sampleButtons"></span>
+          </div>
+        </div>
+
+        <div class="preview-panel" aria-label="Product preview">
+          <div class="preview-topbar">
+            <div class="preview-dots">
+              <span></span>
+              <span></span>
+              <span></span>
+            </div>
+            <div class="preview-pill">Analyst AI</div>
+          </div>
+
+          <div class="dashboard-grid">
+            <div class="metric-card highlight">
+              <span class="metric-label">Revenue impact</span>
+              <strong>+28.4%</strong>
+              <small>vs prior month</small>
+            </div>
+            <div class="metric-card">
+              <span class="metric-label">Conversion</span>
+              <strong>6.7%</strong>
+              <small>growth signal</small>
+            </div>
+            <div class="chart-card large">
+              <div class="line-graph">
+                <span class="line line-1"></span>
+                <span class="line line-2"></span>
+                <span class="line line-3"></span>
+              </div>
+            </div>
+            <div class="list-card">
+              <h4>Key signals</h4>
+              <ul>
+                <li><span class="dot green"></span>Retention up 14%</li>
+                <li><span class="dot gold"></span>Demand spike in Q4</li>
+                <li><span class="dot blue"></span>Inventory optimized</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Chat + Results (after upload) -->
+    <section class="workspace" id="workspace" hidden>
+
+      <!-- Results area -->
+      <div class="results-area" id="resultsArea">
+
+        <!-- Welcome message after upload -->
+        <div class="result-card welcome-card" id="welcomeCard" hidden>
+          <div class="card-icon"><i class="fas fa-circle-check"></i></div>
+          <h3>Dataset loaded successfully!</h3>
+          <p id="welcomeMsg">Ask me anything about your data.</p>
+        </div>
+
+        <!-- Auto Insights -->
+        <div class="result-card insights-card" id="insightsCard" hidden>
+          <div class="card-header">
+            <i class="fas fa-lightbulb"></i>
+            <h3>Auto Insights</h3>
+          </div>
+          <div class="insights-list" id="insightsList"></div>
+        </div>
+
+        <!-- Conversation results go here -->
+        <div id="conversation"></div>
+      </div>
+
+      <!-- Input bar -->
+      <div class="input-bar">
+        <div class="input-wrapper">
+          <i class="fas fa-message input-icon"></i>
+          <input
+            type="text"
+            id="questionInput"
+            placeholder="Ask a question about your data…"
+            autocomplete="off"
+          />
+          <button class="send-btn" id="sendBtn" title="Send">
+            <i class="fas fa-paper-plane"></i>
+          </button>
+        </div>
+        <div class="input-hint">
+          Press <kbd>Enter</kbd> to send · Try "Show top 5 rows" or "What are the trends?"
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- Loading overlay -->
+  <div class="loading-overlay" id="loadingOverlay" hidden>
+    <div class="spinner"></div>
+    <p id="loadingMsg">Analyzing…</p>
+  </div>
+
+  <script src="script.js"></script>
+</body>
+</html>
